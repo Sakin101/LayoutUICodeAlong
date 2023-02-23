@@ -16,6 +16,7 @@
 
 package com.codelab.basiclayouts
 
+import android.content.res.Resources.Theme
 import android.graphics.drawable.shapes.Shape
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -24,6 +25,11 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -35,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.toUpperCase
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.codelab.basiclayouts.ui.theme.MySootheTheme
@@ -124,7 +131,16 @@ fun FavoriteCollectionCard(
 fun AlignYourBodyRow(
     modifier: Modifier = Modifier
 ) {
-    // Implement composable here
+    LazyRow(horizontalArrangement =Arrangement.spacedBy(8.dp),
+        modifier=modifier,
+    contentPadding = PaddingValues(horizontal = 16.dp)
+    )
+    {
+        items(alignYourBodyData){item ->
+            AlignYourBodyElement(drawable = item.drawable,
+                text = item.text)
+        }
+    }
 }
 
 // Step: Favorite collections grid - LazyGrid
@@ -132,21 +148,33 @@ fun AlignYourBodyRow(
 fun FavoriteCollectionsGrid(
     modifier: Modifier = Modifier
 ) {
-    // Implement composable here
+    LazyHorizontalGrid(rows=GridCells.Fixed(2),
+        contentPadding = PaddingValues(6.dp),
+    modifier = modifier.height(120.dp),
+    horizontalArrangement = Arrangement.spacedBy(8.dp),
+    verticalArrangement = Arrangement.spacedBy(8.dp)){
+        items(favoriteCollectionsData){item -> FavoriteCollectionCard(
+            drawable = item.drawable,
+            text = item.text)   }
+    }
 }
 
 // Step: Home section - Slot APIs
 @Composable
 fun HomeSection(
-    modifier: Modifier = Modifier
+    title:Int,
+    modifier: Modifier = Modifier,
+    content:@Composable () -> Unit
 ) {
-    // Implement composable here
+    Column(modifier = modifier) {
+        Text(text = stringResource(id = title).uppercase(), style = MaterialTheme.typography.h3)
+    }
 }
 
 // Step: Home screen - Scrolling
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
-    // Implement composable here
+
 }
 
 // Step: Bottom navigation - Material
@@ -229,7 +257,10 @@ fun AlignYourBodyRowPreview() {
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun HomeSectionPreview() {
-    MySootheTheme { HomeSection() }
+    MySootheTheme {
+        HomeSection(R.string.align_your_body) {
+            AlignYourBodyRow()
+        }}
 }
 
 @Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
